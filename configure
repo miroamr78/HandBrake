@@ -1,22 +1,19 @@
-#! /bin/sh
-#
+#!/bin/sh
+
+declare -ra PYTHON_VERS=("2.7" "2.6" "2.5" "2.4" "2" "")
 
 inpath()
 {
-    IFS=:
-    for d in $PATH
-    do
-        if [ -x $d/$1 ]; then
-            return 0
-        fi
+    local IFS=:
+    for d in $PATH;do
+        [[ -x "$d/$1" ]] && return 0
     done
     return 1
 }
 
-for p in python2.7 python2.6 python2.5 python2.4 python2 python
-do
+for p in ${PYTHON_VERS[@]};do
     if ( inpath $p ); then
-        exec $p `dirname $0`/make/configure.py "$@"
+        exec "python$p" "`dirname $0`/make/configure.py" "$@"
         exit 0
     fi
 done
